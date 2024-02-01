@@ -2,6 +2,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -72,63 +75,98 @@ fun App() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MainScreen() {
-    Box (Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize()) {
+        var show by remember { mutableStateOf(false) }
+        var search by remember { mutableStateOf("") }
         Column {
-        Box(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)) {
-            Text(
-                "Notes",
-                fontSize = 32.sp,
-                modifier = Modifier.align(Alignment.CenterStart),
-                color = Color.White,
-                fontFamily = FontFamily(Font(Res.font.nunito_semibold))
-            )
-
-            TextField(
-                value = "",
-                onValueChange = {
-                },
-                Modifier
-                    .fillMaxWidth(0.5f)
-                    .scale(scaleY = 0.8F, scaleX = 1F)
-                    .padding(20.dp)
-                    .clip(RoundedCornerShape(30.dp))
-                    .align(Alignment.TopCenter)
-                ,
-                placeholder = {
-                    Text(text = "Search by the keyword....", color = Color.White)
-                },
-                trailingIcon = {
-                               Icon(Icons.Outlined.CancelPresentation, null)
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color(0xFF3B3B3B)
-
-                ),
-                maxLines = 1,
-                singleLine = true,
-                textStyle = TextStyle(
-                    color = Color.Black, fontSize = 20.sp
+            Box(
+                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Text(
+                    "Notes",
+                    fontSize = 32.sp,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(Res.font.nunito_semibold))
                 )
-            )
-            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
 
-                Box(
-                    modifier = Modifier.size(72.dp).padding(12.dp)
-                        .background(Color(0xFF565656), shape = RoundedCornerShape(15.dp))
-                ) {
-                    Icon(Icons.Default.Search, null, modifier = Modifier.align(Alignment.Center),tint = Color.White)
+                if (show) {
+                    TextField(
+                        value = search,
+                        onValueChange = {
+                            search = it
+                        },
+                        Modifier
+                            .fillMaxWidth(0.5f)
+                            .scale(scaleY = 0.7F, scaleX = 1F)
+                            .padding(start = 20.dp, end = 20.dp)
+                            .clip(RoundedCornerShape(30.dp))
+                            .align(Alignment.Center),
+                        placeholder = {
+                            Text(
+                                text = "Search by the keyword....", color = Color.White,
+                                fontSize = 10.sp, modifier = Modifier
+                            )
+                        },
+                        trailingIcon = {
+                            Icon(Icons.Outlined.CancelPresentation, null,
+                                modifier = Modifier.clickable {
+                                    show = false
+                                    search = ""
+                                }
+                            )
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color(0xFF3B3B3B),
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            cursorColor = Color.White
+
+                        ),
+                        maxLines = 1,
+                        singleLine = true,
+                        textStyle = TextStyle(
+                            color = Color.White, fontSize = 15.sp
+                        )
+                    )
                 }
-                Box(
-                    modifier = Modifier.size(72.dp).padding(12.dp)
-                        .background(Color(0xFF565656), shape = RoundedCornerShape(15.dp))
-                ) {
-                    Icon(Icons.Default.Info, null, modifier = Modifier.align(Alignment.Center), tint = Color.White)
+
+                Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+
+                    Box(
+                        modifier = Modifier.size(72.dp).padding(12.dp)
+                            .background(Color(0xFF565656), shape = RoundedCornerShape(15.dp))
+                            .clickable { show = !show
+                            search = ""
+                            }
+                    ) {
+                        Icon(
+                            Icons.Default.Search,
+                            null,
+                            modifier = Modifier.align(Alignment.Center),
+                            tint = Color.White
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.size(72.dp).padding(12.dp)
+                            .background(Color(0xFF565656), shape = RoundedCornerShape(15.dp))
+                    ) {
+                        Icon(
+                            Icons.Default.Info,
+                            null,
+                            modifier = Modifier.align(Alignment.Center),
+                            tint = Color.White
+                        )
+                    }
                 }
             }
-        }
             val notesList = mutableListOf(
                 NotesItemDataClass("UI concepts worth existing", Color(0xFFfd99ff)),
-                NotesItemDataClass("Book Review: The design of everyday things by Don Norman", Color(0xFFff9e9e)),
+                NotesItemDataClass(
+                    "Book Review: The design of everyday things by Don Norman",
+                    Color(0xFFff9e9e)
+                ),
                 NotesItemDataClass("Animes produced by Ufotable", Color(0xFF91f48f)),
                 NotesItemDataClass("Mangas planned to read", Color(0xFFfff599)),
                 NotesItemDataClass("Awesome tweets collection", Color(0xFF9effff)),
@@ -137,10 +175,37 @@ fun MainScreen() {
                 NotesItemDataClass("Compose MultiPlatform", Color(0xFFff9e9e)),
             )
 
-            Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
-                LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), modifier = Modifier){
-                    items(notesList) { note ->
-                        NoteItem(note)
+            val filteredItems = notesList.filter {
+                it.title.contains(search, ignoreCase = true)
+            }
+
+            if (search.isEmpty()) {
+                Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+
+                    LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), modifier = Modifier) {
+                        items(notesList) { note ->
+                            NoteItem(note)
+                        }
+                    }
+                }
+
+            } else if (filteredItems.isNotEmpty()) {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)) {
+                    LazyColumn {
+                        items(filteredItems) { note ->
+                            NoteItem(note)
+                        }
+                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.align(Alignment.Center)) {
+                        Image(
+                            painterResource(Res.drawable.file_not_found_image),
+                            null,
+                            modifier = Modifier.size(300.dp)
+                        )
+                        Text("Note not found. Try searching again!", color = Color.White)
                     }
                 }
             }
@@ -150,7 +215,9 @@ fun MainScreen() {
             Text("Create Your first note !", modifier = Modifier.align(Alignment.CenterHorizontally))
         }*/
 
-        FloatingActionButton(modifier = Modifier.align(Alignment.BottomEnd).padding(18.dp),
+
+        FloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomEnd).padding(18.dp),
             onClick = { },
             backgroundColor = Color(0xFF3B3B3B),
             contentColor = Color.White
@@ -162,9 +229,13 @@ fun MainScreen() {
 
 @Composable
 fun NoteItem(noteItem: NotesItemDataClass) {
-Card(shape = RoundedCornerShape(10.dp), backgroundColor = noteItem.color, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)){
-    Text(noteItem.title, modifier = Modifier.padding(horizontal = 32.dp, vertical = 18.dp))
-}
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        backgroundColor = noteItem.color,
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Text(noteItem.title, modifier = Modifier.padding(horizontal = 32.dp, vertical = 18.dp))
+    }
 }
 
 data class NotesItemDataClass(val title: String, val color: Color)
