@@ -1,0 +1,26 @@
+import kotlin.Boolean;
+
+CREATE TABLE Notes (
+id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    isDone INTEGER AS Boolean NOT NULL DEFAULT 0,
+    color INTEGER NOT NULL,
+    date INTEGER NOT NULL,
+    isImportant INTEGER AS Boolean NOT NULL DEFAULT 0
+);
+
+getTasks:
+SELECT * FROM Notes;
+
+insertTask:
+    INSERT OR REPLACE INTO Notes(id, title, isDone, color, date, isImportant)
+    VALUES(?, ?, ?, ?, ? ,?);
+
+deleteTask:
+DELETE FROM Notes
+WHERE id = ?;
+
+updateTask:
+UPDATE Notes
+SET title = :title, isDone = :isDone, color = :color, date = :date, isImportant = :isImportant
+WHERE id = :id;
