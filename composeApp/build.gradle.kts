@@ -65,8 +65,7 @@ kotlin {
             //implementation(libs.runtime)
             //implementation(libs.kotlinx.datetime)
             implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
-
-
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

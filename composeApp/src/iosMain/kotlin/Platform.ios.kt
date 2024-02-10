@@ -1,3 +1,5 @@
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
@@ -5,3 +7,8 @@ class IOSPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+actual class DriverFactory {
+    actual fun createDriver(): SqlDriver =
+        NativeSqliteDriver(NotesDatabase.Schema, "NotesDatabase.db")
+}
