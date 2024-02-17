@@ -9,9 +9,10 @@ class AndroidPlatform : Platform {
 
 actual fun getPlatform(): Platform = AndroidPlatform()
 
+/*
 actual class DriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(NotesDatabase.Schema, context, "NotesDatabase.db")
+        return AndroidSqliteDriver(Database.Schema, context, "NotesDatabase.db")
     }
 
-}
+}*/

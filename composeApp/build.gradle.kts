@@ -1,14 +1,28 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.sqlDelight)
+    //alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
+    @OptIn(ExperimentalWasmDsl::class)
+    js(IR) {
+        moduleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).copy()
+            }
+        }
+        binaries.executable()
+    }
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -37,7 +51,7 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             //implementation(libs.android.driver)
-            implementation("app.cash.sqldelight:android-driver:2.0.1")
+           // implementation("app.cash.sqldelight:android-driver:2.0.1")
 
         }
 
@@ -50,7 +64,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("app.cash.sqldelight:native-driver:2.0.1")
+               // implementation("app.cash.sqldelight:native-driver:2.0.1")
             }
         }
 
@@ -64,24 +78,25 @@ kotlin {
             implementation(compose.components.resources)
             //implementation(libs.runtime)
             //implementation(libs.kotlinx.datetime)
-            implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
+           // implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation("app.cash.sqldelight:sqlite-driver:2.0.1")
+            //implementation("app.cash.sqldelight:sqlite-driver:2.0.1")
         }
 
     }
 }
 
-sqldelight {
+/*sqldelight {
     databases {
         create("NotesDatabase") {
-            packageName.set("org.notesapp.project")
+            packageName.set("org.notesapp.shared")
+            generateAsync.set(true)
         }
     }
-}
+}*/
 
 android {
     namespace = "org.notesapp.project"
@@ -129,4 +144,7 @@ compose.desktop {
     }
 }
 
+compose.experimental {
+    web.application {}
+}
 

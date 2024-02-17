@@ -8,10 +8,10 @@ class JVMPlatform : Platform {
 
 actual fun getPlatform(): Platform = JVMPlatform()
 
-actual class DriverFactory {
+/*actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         NotesDatabase.Schema.create(driver)
         return driver
     }
-}
+}*/

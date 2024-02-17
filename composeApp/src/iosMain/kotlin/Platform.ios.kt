@@ -8,7 +8,9 @@ class IOSPlatform: Platform {
 
 actual fun getPlatform(): Platform = IOSPlatform()
 
+/*
 actual class DriverFactory {
-    actual fun createDriver(): SqlDriver =
-        NativeSqliteDriver(NotesDatabase.Schema, "NotesDatabase.db")
-}
+    actual fun createDriver(): SqlDriver {
+        return NativeSqliteDriver(NotesDatabase.Schema, "NotesDatabase.db")
+
+}*/
