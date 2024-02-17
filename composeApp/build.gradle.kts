@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    //alias(libs.plugins.sqlDelight)
+    id("app.cash.sqldelight") version "2.0.1"
 }
 
 kotlin {
@@ -50,22 +50,14 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
-            //implementation(libs.android.driver)
-           // implementation("app.cash.sqldelight:android-driver:2.0.1")
+            implementation("app.cash.sqldelight:android-driver:2.0.1")
+
 
         }
 
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain.get())
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-               // implementation("app.cash.sqldelight:native-driver:2.0.1")
-            }
+        iosMain.dependencies {
+            implementation("app.cash.sqldelight:native-driver:2.0.1")
+
         }
 
         commonMain.dependencies {
@@ -83,20 +75,19 @@ kotlin {
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-            //implementation("app.cash.sqldelight:sqlite-driver:2.0.1")
+            implementation("app.cash.sqldelight:sqlite-driver:2.0.1")
+        }
+        jsMain {
+            dependencies {
+                implementation("app.cash.sqldelight:web-worker-driver:2.0.1")
+                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+                implementation(npm("@cashapp/sqldelight-sqljs-worker", "2.0.1"))
+                implementation(npm("sql.js", "1.8.0"))
+            }
         }
 
     }
 }
-
-/*sqldelight {
-    databases {
-        create("NotesDatabase") {
-            packageName.set("org.notesapp.shared")
-            generateAsync.set(true)
-        }
-    }
-}*/
 
 android {
     namespace = "org.notesapp.project"
@@ -146,5 +137,14 @@ compose.desktop {
 
 compose.experimental {
     web.application {}
+}
+
+sqldelight {
+    databases {
+        create("NotesDatabase") {
+            packageName.set("org.notesapp.project")
+            generateAsync.set(true)
+        }
+    }
 }
 
