@@ -1,3 +1,4 @@
+import androidx.compose.runtime.Composable
 
 interface Platform {
     val name: String
@@ -16,3 +17,10 @@ fun createDatabase(driverFactory: DriverFactory): NotesDatabase {
 
     // Do more work with the database (see below).
 }*/
+
+
+expect class PlatformContext
+
+
+@Composable
+expect fun getPlatformContext(): PlatformContext
