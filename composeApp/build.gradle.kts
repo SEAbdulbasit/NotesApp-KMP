@@ -30,7 +30,7 @@ kotlin {
             }
         }
     }
-    
+
     jvm("desktop")
 
     listOf(
@@ -43,10 +43,10 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
@@ -70,7 +70,7 @@ kotlin {
             implementation(compose.components.resources)
             //implementation(libs.runtime)
             //implementation(libs.kotlinx.datetime)
-           // implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
+            implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
         }
         desktopMain.dependencies {
